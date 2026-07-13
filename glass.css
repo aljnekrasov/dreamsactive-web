@@ -1,0 +1,1308 @@
+/* ============================================================
+   Dreams Active · Liquid Glass skin
+   Layered on top of styles.css. Everything is scoped to
+   body.glass so the classic /en/ and /es/ pages are untouched.
+
+   Language: Apple Liquid Glass — clear refractive material,
+   strong backdrop blur + saturation, thin specular rim,
+   soft inner light falloff, and colour bleeding from an
+   ambient field. Surfaces stay translucent so the page
+   reads as glass, not milky plastic.
+   ============================================================ */
+
+/* ── Glass design tokens ──────────────────────────────────── */
+body.glass {
+  --bg: #e8e4d3;
+
+  /* Clearer fills — glass, not frosted plastic */
+  --glass-fill: rgba(255, 255, 255, 0.22);
+  --glass-fill-strong: rgba(255, 255, 255, 0.38);
+  --glass-fill-soft: rgba(255, 255, 255, 0.14);
+  --glass-tint: rgba(110, 113, 80, 0.1);
+
+  /* Apple-like: heavy blur + boosted saturation so colour
+     bleeds through the material */
+  --glass-blur: saturate(200%) brightness(1.05) blur(40px);
+  --glass-blur-lg: saturate(220%) brightness(1.06) blur(56px);
+  --glass-blur-sm: saturate(180%) brightness(1.04) blur(20px);
+
+  /* Thin light-catching rim + specular top edge */
+  --glass-border: rgba(255, 255, 255, 0.62);
+  --glass-border-soft: rgba(255, 255, 255, 0.38);
+  --glass-rim: rgba(255, 255, 255, 0.72);
+  --glass-hi:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    inset 0 -0.5px 0 rgba(255, 255, 255, 0.12),
+    inset 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset -1px 0 0 rgba(255, 255, 255, 0.1);
+  --glass-sheen: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 28%,
+    rgba(255, 255, 255, 0.02) 52%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  --glass-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 28px rgba(40, 36, 52, 0.12),
+    0 2px 6px rgba(40, 36, 52, 0.06);
+  --glass-shadow-lg:
+    0 1px 0 rgba(255, 255, 255, 0.4),
+    0 22px 56px rgba(40, 36, 52, 0.18),
+    0 6px 16px rgba(40, 36, 52, 0.08);
+
+  --fg: #2f2c38;
+  --fg-muted: #524f5c;
+  --fg-quiet: #7c7888;
+
+  --line: rgba(47, 44, 56, 0.12);
+  --line-soft: rgba(47, 44, 56, 0.08);
+  --line-strong-quiet: rgba(47, 44, 56, 0.2);
+
+  --accent: #6e7150;
+  --accent-hover: #5c5f40;
+  --dot: #6e7150;
+
+  --shadow-card: var(--glass-shadow);
+  color: var(--fg);
+}
+
+/* ── Flat beige backdrop (no gradients) ───────────────────── */
+body.glass {
+  /* very light warm beige base + a slightly darker band tone */
+  --beige-base: #f3efe4;
+  --beige-band: #e8e1d0;
+  background: var(--beige-base);
+  isolation: isolate;
+}
+
+/* Soft film grain — micro-texture like real glass coatings */
+body.glass::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Ambient colour blobs disabled — flat beige backdrop now. */
+.glass-bg {
+  display: none;
+}
+.glass-bg--unused {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.glass-bg .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.88;
+  will-change: transform;
+}
+.glass-bg .blob--1 {
+  width: 52vw;
+  height: 52vw;
+  top: -12vw;
+  left: -10vw;
+  background: radial-gradient(circle, rgba(135, 143, 90, 0.82), transparent 68%);
+  animation: floatBlob 24s ease-in-out infinite;
+}
+.glass-bg .blob--2 {
+  width: 48vw;
+  height: 48vw;
+  top: 4vw;
+  right: -12vw;
+  background: radial-gradient(circle, rgba(206, 192, 156, 0.74), transparent 68%);
+  animation: floatBlob 28s ease-in-out infinite reverse;
+}
+.glass-bg .blob--3 {
+  width: 50vw;
+  height: 50vw;
+  bottom: -4vw;
+  left: 12vw;
+  background: radial-gradient(circle, rgba(190, 180, 118, 0.72), transparent 68%);
+  animation: floatBlob 32s ease-in-out infinite;
+}
+.glass-bg .blob--4 {
+  width: 40vw;
+  height: 40vw;
+  bottom: -8vw;
+  right: 0;
+  background: radial-gradient(circle, rgba(152, 164, 112, 0.7), transparent 68%);
+  animation: floatBlob 26s ease-in-out infinite reverse;
+}
+@keyframes floatBlob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(5vw, 4vw, 0) scale(1.1);
+  }
+  66% {
+    transform: translate3d(-4vw, 3vw, 0) scale(0.94);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-bg .blob {
+    animation: none;
+  }
+}
+
+/* Shared frosted-glass recipe + refractive sheen layer */
+.glass .btn--primary,
+.glass .btn--outline,
+.glass .tag,
+.glass .icon-btn,
+.glass .pillar-card,
+.glass .team-card,
+.glass .outcome-card,
+.glass .timeline-card,
+.glass .pricing-pebble,
+.glass .pebble,
+.glass .modal-card,
+.glass .lang-switch,
+.glass .site-header.scrolled .header-inner,
+.glass .modal-close,
+.glass .modal-doctor {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Specular sheen + soft inner refraction on major surfaces */
+.glass .pillar-card::before,
+.glass .team-card::before,
+.glass .outcome-card::before,
+.glass .timeline-card::before,
+.glass .pricing-pebble::before,
+.glass .pebble::before,
+.glass .modal-card::before,
+.glass .site-header.scrolled .header-inner::before,
+.glass .btn--outline::before,
+.glass .lang-switch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--glass-sheen);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Thin refractive rim — light bends at the edge */
+.glass .pillar-card::after,
+.glass .team-card::after,
+.glass .outcome-card::after,
+.glass .timeline-card::after,
+.glass .pricing-pebble::after,
+.glass .pebble::after,
+.glass .modal-card::after,
+.glass .site-header.scrolled .header-inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 12px 28px rgba(255, 255, 255, 0.08),
+    inset 0 -18px 32px rgba(80, 70, 100, 0.04);
+}
+
+.glass .pillar-card > *,
+.glass .team-card > *,
+.glass .outcome-card > *,
+.glass .timeline-card > *,
+.glass .pricing-pebble > *,
+.glass .pebble > *,
+.glass .modal-card > *,
+.glass .site-header.scrolled .header-inner > *,
+.glass .btn--outline > *,
+.glass .lang-switch > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Header → floating glass pill ─────────────────────────── */
+.glass .site-header {
+  padding-top: 12px;
+}
+.glass .site-header .header-inner {
+  border-radius: 999px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition:
+    background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    -webkit-backdrop-filter 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    backdrop-filter 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.glass .site-header.scrolled {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+.glass .site-header.scrolled .header-inner {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.42) 0%,
+      rgba(255, 255, 255, 0.18) 100%
+    );
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  /* No crisp white rim/underline here — on a near-full-width pill
+     it reads as a stray stripe under the header. Soft edge only. */
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 30px rgba(40, 36, 52, 0.12);
+}
+.glass .site-header.scrolled .header-inner::after {
+  box-shadow: none;
+}
+.glass .header-inner {
+  height: 60px;
+}
+
+/* Language switch as a little glass capsule */
+.glass .lang-switch {
+  background: var(--glass-fill-soft);
+  border: 1px solid var(--glass-border-soft);
+  border-radius: 999px;
+  padding: 5px 10px;
+  box-shadow: var(--glass-hi);
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.glass .btn--primary {
+  background: linear-gradient(
+    180deg,
+    rgba(132, 136, 98, 0.88) 0%,
+    rgba(100, 104, 70, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  color: #f7f4ec;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 10px 28px rgba(84, 88, 58, 0.28),
+    0 2px 6px rgba(84, 88, 58, 0.16);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  backdrop-filter: var(--glass-blur-sm);
+}
+.glass .btn--primary:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(142, 146, 108, 0.94) 0%,
+    rgba(110, 114, 80, 0.94) 100%
+  );
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 14px 32px rgba(84, 88, 58, 0.34),
+    0 3px 8px rgba(84, 88, 58, 0.18);
+}
+.glass .btn--outline {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.36) 0%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+  border: 1px solid var(--glass-border);
+  color: var(--fg);
+  box-shadow: var(--glass-hi), 0 6px 18px rgba(40, 36, 52, 0.08);
+}
+.glass .btn--outline:hover {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.22) 100%
+    );
+  color: var(--fg);
+  transform: translateY(-1px);
+}
+
+.glass .icon-btn {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+  border: 1px solid var(--glass-border-soft);
+  box-shadow: var(--glass-hi);
+}
+
+/* ── Chips / tags ─────────────────────────────────────────── */
+.glass .tag {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  border: 1px solid var(--glass-border-soft);
+  box-shadow: var(--glass-hi);
+  color: var(--fg-muted);
+}
+
+/* ── Cards → refractive glass panels ──────────────────────── */
+.glass .pillar-card,
+.glass .team-card,
+.glass .outcome-card {
+  background:
+    linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.14) 45%,
+      rgba(255, 255, 255, 0.22) 100%
+    );
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: var(--glass-hi), var(--glass-shadow);
+}
+.glass .pillar-card:hover,
+.glass .team-card:hover,
+.glass .outcome-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glass-hi), var(--glass-shadow-lg);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Feature timeline pill — tinted sage glass */
+.glass .timeline-card {
+  background:
+    linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.38) 0%,
+      rgba(255, 255, 255, 0.14) 100%
+    );
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-hi), var(--glass-shadow);
+}
+.glass .timeline-card--feature {
+  background: linear-gradient(
+    165deg,
+    rgba(126, 130, 92, 0.92) 0%,
+    rgba(96, 100, 68, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06),
+    var(--glass-shadow);
+}
+.glass .timeline-card--feature::before {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    transparent 70%
+  );
+}
+.glass .timeline-card--feature li,
+.glass .timeline-card--feature .eyebrow {
+  color: #f5f2e8;
+}
+
+/* Alternating darker beige bands — flat, no gradient/blur */
+.glass .section--tint {
+  background: var(--beige-band);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+/* ── Dark app-style bands (Program + Offer) ─────────────────
+   Very dark grey-green charcoal — the brand sage taken almost
+   to black — with smoky glass cards and light ink on top. */
+.glass .section--dark {
+  background: #20241b;
+}
+.glass .section--dark .eyebrow {
+  color: rgba(244, 240, 230, 0.62);
+}
+.glass .section--dark .section-title {
+  color: #f2efe6;
+}
+.glass .section--dark .lead {
+  color: rgba(244, 240, 230, 0.72);
+}
+.glass .section--dark .dot {
+  background: #a9ac86;
+}
+.glass .section--dark .tag {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: rgba(244, 240, 230, 0.85);
+  box-shadow: none;
+}
+.glass .section--dark .tag::before {
+  display: none;
+}
+
+/* Cards → smoky dark glass */
+.glass .section--dark .pillar-card {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 18px 44px rgba(0, 0, 0, 0.42);
+}
+.glass .section--dark .pillar-card::before {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    transparent 70%
+  );
+}
+.glass .section--dark .pillar-card::after {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.glass .section--dark .pillar-card h3 {
+  color: #f2efe6;
+}
+.glass .section--dark .pillar-card p {
+  color: rgba(244, 240, 230, 0.7);
+}
+.glass .section--dark .pillar-card .num {
+  color: rgba(244, 240, 230, 0.5);
+}
+
+/* Offer slab tilts gently in 3D as the pointer moves over it */
+.glass #pricing .pricing-wrap {
+  perspective: 1100px;
+}
+.glass #pricing .pricing-pebble {
+  transition: transform 0.22s ease-out;
+  will-change: transform;
+}
+
+/* Pricing slab → dark glass */
+.glass .section--dark .pricing-pebble {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 48%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 26px 60px rgba(0, 0, 0, 0.5);
+}
+.glass .section--dark .pricing-pebble::before {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    transparent 70%
+  );
+}
+.glass .section--dark .pricing-pebble::after {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.glass .section--dark .price .amount {
+  color: #f2efe6;
+}
+.glass .section--dark .price .unit,
+.glass .section--dark .pay-note {
+  color: rgba(244, 240, 230, 0.55);
+}
+.glass .section--dark .includes li {
+  color: rgba(244, 240, 230, 0.78);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+/* Team keeps the darker band tone (drop the old sage wash) */
+.glass .team-section {
+  background: var(--beige-band);
+}
+
+/* ── Pricing pebble → hero glass slab ─────────────────────── */
+.glass .pricing-pebble,
+.glass .pebble {
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.52) 0%,
+      rgba(255, 255, 255, 0.22) 42%,
+      rgba(255, 255, 255, 0.34) 100%
+    );
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-hi), var(--glass-shadow-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  backdrop-filter: var(--glass-blur-lg);
+}
+
+.glass .includes li {
+  border-bottom-color: rgba(47, 44, 56, 0.1);
+}
+
+/* ── Photo surfaces get a glassy frame ────────────────────── */
+.glass .ba-photo,
+.glass .outcome-photo,
+.glass .team-portrait,
+.glass .diploma-thumb,
+.glass .ba-video video {
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 10px 30px rgba(40, 36, 52, 0.14);
+}
+
+/* ── Modals / lightbox → deeper glass ─────────────────────── */
+.glass .modal-card {
+  background:
+    linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.28) 100%
+    );
+  border: 1px solid var(--glass-border);
+  border-radius: 30px;
+  box-shadow: var(--glass-hi), var(--glass-shadow-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  backdrop-filter: var(--glass-blur-lg);
+}
+.glass .modal-overlay,
+.glass .lightbox-overlay {
+  background: rgba(28, 26, 36, 0.36);
+  -webkit-backdrop-filter: saturate(140%) blur(22px);
+  backdrop-filter: saturate(140%) blur(22px);
+}
+.glass .modal-close {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.16) 100%
+    );
+  border: 1px solid var(--glass-border-soft);
+  box-shadow: var(--glass-hi);
+}
+.glass .modal-doctor {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+  border: 1px solid var(--glass-border-soft);
+  box-shadow: var(--glass-hi);
+}
+
+/* ── Mobile sheet → frosted ───────────────────────────────── */
+/* Collapsed sheet must paint NOTHING: even a 1px transparent
+   border with backdrop-filter draws a bright hairline across the
+   page. All visuals apply only while the menu is open. */
+.glass .mobile-sheet {
+  background: none;
+  border-top: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.glass .site-header.menu-open .mobile-sheet {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.48) 0%,
+      rgba(255, 255, 255, 0.28) 100%
+    );
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  backdrop-filter: var(--glass-blur-lg);
+  border-bottom: 1px solid var(--glass-border-soft);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ── Fullscreen photo captions get a glass chip ───────────── */
+.glass .ba-photo figcaption {
+  background: rgba(28, 26, 36, 0.28);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+  backdrop-filter: saturate(160%) blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Real horizontal logo — header + footer */
+.glass .brand-logo-full {
+  height: 30px;
+  width: auto;
+  display: block;
+}
+@media (min-width: 768px) {
+  .glass .brand-logo-full {
+    height: 34px;
+  }
+}
+.glass .brand-logo-full--footer {
+  height: 40px;
+}
+
+/* Hero brand lockup (real horizontal logo, larger) */
+.glass .hero-lockup {
+  width: 300px;
+  max-width: 78vw;
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 8px 22px rgba(40, 36, 52, 0.16));
+}
+@media (min-width: 1200px) {
+  .glass .hero-lockup {
+    width: 340px;
+  }
+}
+
+/* ── Hero: text + family photo on flat beige ──────────────── */
+.glass .hero {
+  padding-top: 152px;
+  padding-bottom: 0;
+  min-height: 0;
+  display: block;
+}
+.glass .hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  align-items: end;
+}
+.glass .hero-content {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+}
+.glass .hero-photo {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.glass .hero-photo img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 320px;
+  max-height: 58vh;
+  margin-bottom: 36px;
+}
+@media (min-width: 1024px) {
+  /* First screen fits exactly in the viewport: no outer padding —
+     the header clearance lives inside the 100vh grid instead,
+     so nothing pushes the hero taller than one screen. */
+  .glass .hero {
+    padding-top: 0;
+  }
+  .glass .hero-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 40px;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 120px;
+  }
+  .glass .hero-content {
+    margin: 0;
+    text-align: left;
+  }
+  .glass .hero-content .hero-logo {
+    align-items: flex-start;
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .glass .hero-content .hero-lockup {
+    margin: 0;
+  }
+  .glass .hero-content .hero-title,
+  .glass .hero-content .hero-sub {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .glass .hero-content .cta-row {
+    justify-content: flex-start;
+  }
+  .glass .hero-content .meta-row {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .glass .hero-photo {
+    justify-content: flex-end;
+    align-self: end;
+  }
+  .glass .hero-photo img {
+    max-width: 100%;
+    max-height: calc(100vh - 180px);
+    margin-bottom: 72px;
+  }
+}
+
+.glass .orb-glow {
+  background: radial-gradient(
+    circle,
+    rgba(150, 156, 108, 0.34),
+    rgba(198, 188, 146, 0.14) 45%,
+    transparent 68%
+  );
+  filter: blur(8px);
+}
+
+/* ── Full-bleed video block (edge to edge, no fields at all) ── */
+.glass #video {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.glass #video .ba-video {
+  max-width: 100%;
+  margin: 0;
+}
+.glass #video .ba-video video {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  display: block;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.glass #video .ba-note {
+  margin-top: 20px;
+}
+
+/* Footer sits on a faint frosted rail */
+.glass .site-footer {
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+  backdrop-filter: saturate(160%) blur(18px);
+  border-top: 1px solid var(--glass-border-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Company / operator block above the copyright line */
+.glass .footer-company {
+  margin-top: 24px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--fg-quiet);
+}
+.glass .footer-company a {
+  color: var(--fg-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--dur) var(--ease);
+}
+.glass .footer-company a:hover {
+  color: var(--fg);
+}
+
+/* Copyright + legal links row */
+.glass .footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.glass .footer-legal-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.glass .footer-legal-links a {
+  color: var(--fg-quiet);
+  transition: color var(--dur) var(--ease);
+}
+.glass .footer-legal-links a:hover {
+  color: var(--fg);
+}
+.glass .footer-legal-links .sep {
+  color: var(--line-strong-quiet);
+}
+
+/* Studio credit — quiet serif-italic, app-label style */
+.glass .made-by {
+  margin-left: auto;
+  font-family: Georgia, "Iowan Old Style", "Palatino", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--fg-quiet);
+}
+@media (max-width: 640px) {
+  .glass .made-by {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Soften solid surfaces that fight the glass field */
+.glass .site-header:not(.scrolled) {
+  background: transparent;
+}
+
+/* Scattered decorative polaroids are off in the flat-beige skin —
+   they overlapped text and broke the clean band rhythm. */
+.glass .scatter {
+  display: none !important;
+}
+
+/* ── App design-language accents ──────────────────────────────
+   Borrowed from the mobile app: smoky dark glass capsules on
+   photo backdrops, serif-italic micro-labels (“8 hs sleep”),
+   airy letter-spaced uppercase titles, thin outline pills. */
+
+/* Serif-italic accent labels — echoes the app's stat labels */
+.glass .eyebrow {
+  font-family: Georgia, "Iowan Old Style", "Palatino", "Times New Roman", serif;
+  font-style: italic;
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+  font-size: 16px;
+}
+.glass .meta-row {
+  font-family: Georgia, "Iowan Old Style", "Palatino", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+/* Smoky dark glass capsule (the “TO BE A DAD” card) */
+.glass .fs-panel {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 44px 36px 40px;
+  border-radius: 60px;
+  background: rgba(20, 20, 24, 0.46);
+  -webkit-backdrop-filter: saturate(105%) blur(26px);
+  backdrop-filter: saturate(105%) blur(26px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+.glass .fs-panel h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 300;
+  font-size: clamp(21px, 2.8vw, 30px);
+  line-height: 1.3;
+  max-width: 24ch;
+  margin: 0 auto;
+}
+.glass .fs-panel .eyebrow {
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 16px;
+}
+.glass .fs-panel .bullets {
+  margin-top: 22px;
+  gap: 12px;
+}
+.glass .fs-panel .bullets li {
+  font-size: 16px;
+  justify-content: center;
+}
+/* Clean centered lines, app-card style — no bullet dots */
+.glass .fs-panel .bullets .dot {
+  display: none;
+}
+.glass .fs-panel .btn {
+  margin-top: 26px;
+}
+
+/* Bare variant — typography only, no smoky slab behind the text */
+.glass .fs-panel--bare {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Thin outline pill on dark photo — the app's START button */
+.glass .btn--start,
+.glass .fs-panel .btn--primary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  color: #fff;
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.glass .btn--start:hover,
+.glass .fs-panel .btn--primary:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.92);
+  color: #2f2c38;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .glass .fs-panel {
+    padding: 34px 24px 32px;
+    border-radius: 44px;
+  }
+}
+
+/* The smoky panel now carries the contrast, so the photo can
+   breathe — lighter veils, like the app's home screen. */
+.glass .fullscreen-photo--center .fullscreen-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.18) 50%,
+    rgba(0, 0, 0, 0.32) 100%
+  );
+}
+.glass .fullscreen-photo--top .fullscreen-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.58) 0%,
+    rgba(0, 0, 0, 0.3) 38%,
+    rgba(0, 0, 0, 0.05) 68%
+  );
+}
+
+/* Reserve space for lazy-loaded media so the page never jumps
+   while images/video stream in (fixes scroll shifting). */
+.glass .outcome-photo {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
+}
+.glass .ba-video video,
+.glass #video video {
+  aspect-ratio: 16 / 9;
+}
+
+/* ── Legal document pages (/legal/*) ──────────────────────── */
+.glass .legal-doc {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 140px 24px 96px;
+}
+.glass .legal-doc h1 {
+  font-weight: 300;
+  font-size: clamp(30px, 4.5vw, 44px);
+  line-height: 1.08;
+  color: var(--fg);
+}
+.glass .legal-updated {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--fg-quiet);
+}
+.glass .legal-doc h2 {
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.25;
+  color: var(--fg);
+  margin-top: 44px;
+}
+.glass .legal-doc p,
+.glass .legal-doc li {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+}
+.glass .legal-doc p {
+  margin-top: 14px;
+}
+.glass .legal-doc ul {
+  margin-top: 14px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.glass .legal-doc a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.glass .legal-doc .legal-callout {
+  margin-top: 20px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: rgba(110, 113, 80, 0.1);
+  border: 1px solid rgba(110, 113, 80, 0.18);
+}
+.glass .legal-doc .legal-callout p {
+  margin-top: 0;
+}
+.glass .legal-back {
+  display: inline-block;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: var(--fg-quiet);
+  transition: color var(--dur) var(--ease);
+}
+.glass .legal-back:hover {
+  color: var(--fg);
+}
+.glass .legal-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 40px 24px 56px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--fg-quiet);
+}
+.glass .legal-footer a {
+  color: var(--fg-muted);
+}
+.glass .legal-footer .footer-legal-links {
+  justify-content: center;
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Graceful fallback where backdrop-filter is unsupported */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass .pillar-card,
+  .glass .team-card,
+  .glass .outcome-card,
+  .glass .timeline-card,
+  .glass .pricing-pebble,
+  .glass .pebble,
+  .glass .modal-card,
+  .glass .site-header.scrolled .header-inner,
+  .glass .btn--outline,
+  .glass .lang-switch,
+  .glass .mobile-sheet {
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  body.glass::before {
+    display: none;
+  }
+}
+
+/* Reduce sheen intensity on very small screens for clarity */
+@media (max-width: 640px) {
+  body.glass {
+    --glass-blur: saturate(190%) brightness(1.04) blur(28px);
+    --glass-blur-lg: saturate(200%) brightness(1.05) blur(40px);
+  }
+
+  .glass .pillar-card::after,
+  .glass .team-card::after,
+  .glass .outcome-card::after,
+  .glass .timeline-card::after,
+  .glass .pricing-pebble::after,
+  .glass .pebble::after,
+  .glass .modal-card::after {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+      inset 0 8px 18px rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* ============================================================
+   Diplomas — credence strip shelf
+   ============================================================ */
+
+.glass .diplomas-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: end;
+}
+.glass .diplomas-rail-copy .section-title {
+  max-width: none;
+  margin-top: 0;
+}
+.glass .diplomas-rail-text {
+  margin-top: 14px;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+  max-width: 28ch;
+}
+
+.glass .diploma-collection {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 8px 4px 28px;
+  margin: 0 -4px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.glass .diploma-card {
+  flex: 0 0 min(72vw, 240px);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  min-width: 0;
+}
+.glass .diploma-frame {
+  display: block;
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.42) 0%,
+      rgba(255, 255, 255, 0.14) 100%
+    );
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-hi), var(--glass-shadow);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.glass .diploma-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 14px 28px rgba(255, 255, 255, 0.08);
+}
+.glass .diploma-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top center;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.35);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.glass .diploma-card:hover .diploma-frame {
+  transform: translateY(-4px);
+  box-shadow: var(--glass-hi), var(--glass-shadow-lg);
+}
+.glass .diploma-card:hover .diploma-thumb {
+  transform: scale(1.03);
+}
+.glass .diploma-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 4px;
+}
+.glass .diploma-person {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-quiet);
+}
+.glass .diploma-title {
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 400;
+  color: var(--fg);
+}
+.glass .diploma-school {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--fg-muted);
+}
+
+@media (min-width: 900px) {
+  .glass .diplomas-stage {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
+  .glass .diploma-card {
+    flex-basis: 220px;
+  }
+}
+
+/* ── Glass card stack (test, EN page only via body class) ──
+   Every top-level slide is a sticky liquid-glass card; the next
+   slide rides up over the pinned previous one, like pulling panes
+   off a stack of glass cards. The page script pins tall cards by
+   their bottom edge (inline top/z-index). */
+.glass.stack-cards main > section {
+  position: sticky;
+  border-radius: 48px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 -22px 56px rgba(40, 36, 24, 0.26);
+}
+/* Card material: solid panes. Live backdrop blur on full-screen
+   cards makes the GPU re-blur everything under them on every frame
+   of the scroll (phones heat up), so the frosted look is baked into
+   flat colours matched to the old translucent mix. */
+.glass.stack-cards main > .section {
+  background: #ece7d8;
+}
+.glass.stack-cards main > .section--dark {
+  background: #20241b;
+}
+.glass.stack-cards main > .section--tint {
+  background: #e8e1d0;
+}
+/* The hero opens the stack — it is the page itself, not a card. */
+.glass.stack-cards main > .hero {
+  border-radius: 0;
+  box-shadow: none;
+}
+/* The footer closes the stack: it rides over the last photo card. */
+.glass.stack-cards .site-footer {
+  position: relative;
+  z-index: 40;
+  background: var(--bg);
+  border-radius: 48px 48px 0 0;
+  box-shadow: 0 -22px 56px rgba(40, 36, 24, 0.2);
+}
+
+/* The full-bleed video becomes a card of its own: rounded glass
+   pane with a little air to the viewport edges. */
+.glass.stack-cards #video .ba-video video {
+  width: calc(100vw - 48px);
+  max-width: calc(100vw - 48px);
+  margin-left: calc(50% - 50vw + 24px);
+  border-radius: 48px;
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 18px 44px rgba(40, 36, 52, 0.2);
+}
+
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#efe9dc" />
+    <title>Dreams Active</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+    <meta name="description" content="Dreams Active — postpartum recovery course. Choose your language: English or Español." />
+    <!-- Spanish browsers land on /es/, everyone else on /en/. -->
+    <link rel="alternate" hreflang="en" href="https://dreamsactive.com/en/" />
+    <link rel="alternate" hreflang="es" href="https://dreamsactive.com/es/" />
+    <link rel="alternate" hreflang="x-default" href="https://dreamsactive.com/en/" />
+    <script>
+      (function () {
+        var langs = navigator.languages || [navigator.language || "en"];
+        var dest = "en/";
+        for (var i = 0; i < langs.length; i++) {
+          var l = (langs[i] || "").toLowerCase();
+          if (l.indexOf("es") === 0) { dest = "es/"; break; }
+          if (l.indexOf("en") === 0) { dest = "en/"; break; }
+        }
+        location.replace(dest);
+      })();
+    </script>
+    <!-- No-JS fallback: default to English after a moment, with a manual chooser below. -->
+    <meta http-equiv="refresh" content="1; url=en/" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: #efe9dc;
+        color: #3e3b2c;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        text-align: center;
+      }
+      .choose a {
+        display: inline-block;
+        margin: 0 8px;
+        padding: 12px 26px;
+        border-radius: 50px;
+        background: #6e7150;
+        color: #f4efe4;
+        text-decoration: none;
+        font-size: 16px;
+      }
+      .choose a.alt {
+        background: transparent;
+        color: #3e3b2c;
+        border: 1px solid rgba(62, 59, 44, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <p>Dreams Active</p>
+    <div class="choose">
+      <a href="en/">English</a>
+      <a class="alt" href="es/">Español</a>
+    </div>
+  </body>
+</html>
