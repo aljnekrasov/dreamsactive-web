@@ -29,8 +29,8 @@
     --card-solid: #fbf8f1;
     --glass-border: rgba(255, 255, 255, 0.62);
     --line: rgba(62, 59, 44, 0.14);
-    --dark: #1c352a;
-    --dark-2: #26493a;
+    --dark: #0d1a13;
+    --dark-2: #17291f;
     --dark-fg: #f4efe4;
     --dark-fg-muted: #c3cfc0;
     --shadow:
@@ -128,10 +128,32 @@
   }
   .slide--dark {
     background:
-      radial-gradient(120% 90% at 82% -10%, rgba(124, 163, 139, 0.32), transparent 55%),
-      radial-gradient(90% 80% at 8% 108%, rgba(124, 163, 139, 0.2), transparent 55%),
+      radial-gradient(120% 90% at 82% -10%, rgba(124, 163, 139, 0.16), transparent 55%),
+      radial-gradient(90% 80% at 8% 108%, rgba(124, 163, 139, 0.1), transparent 55%),
       var(--dark);
     color: var(--dark-fg);
+  }
+  /* Photo substrate — the real Liquid Glass surface. The image is
+     painted into the slide background under a translucent veil, so
+     every card's backdrop-filter samples and refracts the photo
+     behind it. Per-slide photo comes from --slide-photo. */
+  .slide--img {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(243, 239, 228, 0.9) 0%,
+        rgba(243, 239, 228, 0.8) 32%,
+        rgba(243, 239, 228, 0.55) 62%,
+        rgba(243, 239, 228, 0.5) 100%
+      ),
+      var(--slide-photo, none) center / cover no-repeat,
+      var(--beige);
+  }
+  .slide--dark.slide--img {
+    background:
+      linear-gradient(180deg, rgba(23, 44, 35, 0.72) 0%, rgba(16, 32, 25, 0.86) 100%),
+      var(--slide-photo, none) center / cover no-repeat,
+      var(--dark);
   }
   .slide--center {
     align-items: center;
@@ -230,6 +252,22 @@
       inset 0 12px 28px rgba(255, 255, 255, 0.06),
       inset 0 -18px 32px rgba(0, 0, 0, 0.12);
   }
+  /* Any glass card sitting on a dark slide flips to dark glass. */
+  .slide--dark .card {
+    background: linear-gradient(165deg, rgba(46, 86, 67, 0.55), rgba(26, 50, 39, 0.62));
+    color: var(--dark-fg);
+  }
+  .slide--dark .card::before { opacity: 0.3; }
+  .slide--dark .card::after {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0 12px 28px rgba(255, 255, 255, 0.05),
+      inset 0 -18px 32px rgba(0, 0, 0, 0.14);
+  }
+  .slide--dark .card h3 { color: var(--tan); }
+  .slide--dark .card p { color: var(--dark-fg-muted); }
+  .slide--dark .product-grid .card,
+  .slide--dark .family-grid .card { border-left-color: var(--sage); }
   .card--dark h3 { color: var(--tan); }
   .card--dark p { color: var(--dark-fg-muted); }
 
@@ -325,22 +363,35 @@
   .grid { display: grid; gap: 20px; }
 
   /* ── Photo layouts ────────────────────────────────────────── */
+  /* Dark band slides: photo (black series) on the right third,
+     the rest near-black green. The photo itself is masked with a
+     long transparent ramp on its left edge, so there is no seam —
+     it dissolves into the dark field. */
   .edge-photo {
     position: absolute;
     top: 0; right: 0;
-    width: 44%;
+    width: 46%;
     height: 100%;
     object-fit: cover;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.45) 38%,
+      rgba(0, 0, 0, 0.85) 62%,
+      black 80%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.45) 38%,
+      rgba(0, 0, 0, 0.85) 62%,
+      black 80%
+    );
   }
   .edge-fade {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      90deg,
-      var(--dark) 52%,
-      rgba(28, 53, 42, 0.55) 72%,
-      rgba(28, 53, 42, 0.12) 100%
-    );
+    background: linear-gradient(90deg, rgba(13, 26, 19, 0) 60%, rgba(13, 26, 19, 0.25) 100%);
   }
   .split-content {
     position: relative;
@@ -392,9 +443,16 @@
     display: block;
     height: 74px;
     width: auto;
+    align-self: flex-start;
     margin: 0 0 26px;
   }
   .brand-logo--light { filter: brightness(0) invert(1); }
+
+  .hero-round {
+    margin-top: 52px;
+    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dark-fg-muted);
+  }
   .title-sub {
     font-family: var(--serif);
     font-style: italic;
@@ -734,15 +792,14 @@
   }
 
   /* ── Slide 17 · Thanks ────────────────────────────────────── */
-  .thanks-title { font-size: 76px; font-weight: 650; letter-spacing: 0.14em; text-indent: 0.14em; margin: 30px 0 12px; }
-  .thanks-sub { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--tan); margin-bottom: 52px; }
+  .thanks-title { font-size: 60px; font-weight: 650; letter-spacing: 0.1em; margin: 26px 0 10px; }
+  .thanks-sub { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--tan); margin-bottom: 32px; }
   .thanks-name { font-size: 18px; font-weight: 650; }
-  .thanks-role { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--dark-fg-muted); margin: 5px 0 22px; }
+  .thanks-role { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--dark-fg-muted); margin: 5px 0 16px; }
   .thanks-contact { font-size: 16px; line-height: 1.7; color: var(--tan-soft); }
   .thanks-legal {
-    position: absolute; left: 0; right: 0; bottom: 44px;
+    position: absolute; left: 84px; bottom: 34px;
     font-size: 12px; letter-spacing: 0.22em; color: rgba(244, 239, 228, 0.4);
-    text-align: center;
   }
 
   /* ── Navigation chrome ────────────────────────────────────── */
@@ -814,19 +871,16 @@
   <section class="slide slide--dark">
     <img class="edge-photo" src="img/kiss.jpg" alt="" />
     <div class="edge-fade"></div>
-    <div class="split-content" style="align-items: center; text-align: center">
+    <div class="split-content">
       <img class="brand-logo brand-logo--light" src="../assets/logo-horizontal.svg" alt="Dreams Active" />
       <div class="title-sub">Платформа для современных родителей</div>
       <div class="title-chips">Беременность <b>·</b> Послеродовое восстановление <b>·</b> Раннее родительство</div>
-    </div>
-    <div class="title-foot">
-      <div class="round">Seed-раунд — Апрель 2026</div>
-      <div class="conf">Конфиденциально</div>
+      <div class="hero-round">Seed-раунд — Апрель 2026 · Конфиденциально</div>
     </div>
   </section>
 
   <!-- 2 · Problem -->
-  <section class="slide">
+  <section class="slide slide--dark">
     <div class="eyebrow">the problem</div>
     <h1>Проблема</h1>
     <p class="lead">Современные родители проводят 2&nbsp;года в самом эмоционально уязвимом и жадном до информации периоде жизни — а цифровые продукты их подводят.</p>
@@ -897,7 +951,7 @@
   </section>
 
   <!-- 4 · Every modern family -->
-  <section class="slide">
+  <section class="slide slide--dark">
     <div class="eyebrow">inclusive by design</div>
     <h1>Создано для каждой современной семьи</h1>
     <p class="lead" style="margin-bottom: 30px">Индивидуальные подписки. Семейные связи. Инклюзивность по дизайну — не как запоздалая мысль.</p>
@@ -1037,21 +1091,18 @@
   </section>
 
   <!-- 9 · Product -->
-  <section class="slide">
+  <section class="slide slide--dark">
     <div class="eyebrow">product</div>
     <h1>Продукт</h1>
     <p class="lead" style="margin-bottom: 30px">Премиальный мобильный опыт для современных семей — уже работает с платящими пользователями.</p>
     <div class="body-fill">
-      <div class="with-photo">
-        <div class="grid product-grid">
-          <div class="card"><h3>Библиотека экспертных видео</h3><p>50+ профессиональных видео, снятых во время реальной беременности фаундера</p></div>
-          <div class="card"><h3>Индивидуальные профили</h3><p>Отдельные подписки для мамы, папы, любых родителей + общий ребёнок</p></div>
-          <div class="card"><h3>Отслеживание прогресса</h3><p>Геймификация, ежедневные check-in, дневник питания</p></div>
-          <div class="card"><h3>Премиальный дизайн</h3><p>Кинематографичные AI-изображения, редакторская типографика</p></div>
-          <div class="card"><h3>Мультиплатформенность</h3><p>Web PWA сейчас, нативные iOS + Android запуск Q2 2026</p></div>
-          <div class="card"><h3>Глобальная подписочная модель</h3><p>Stripe + Tribute через Wyoming LLC без привязки к РФ</p></div>
-        </div>
-        <img class="side-photo" src="img/bump-olive.jpg" alt="" />
+      <div class="grid product-grid">
+        <div class="card"><h3>Библиотека экспертных видео</h3><p>50+ профессиональных видео, снятых во время реальной беременности фаундера</p></div>
+        <div class="card"><h3>Индивидуальные профили</h3><p>Отдельные подписки для мамы, папы, любых родителей + общий ребёнок</p></div>
+        <div class="card"><h3>Отслеживание прогресса</h3><p>Геймификация, ежедневные check-in, дневник питания</p></div>
+        <div class="card"><h3>Премиальный дизайн</h3><p>Кинематографичные AI-изображения, редакторская типографика</p></div>
+        <div class="card"><h3>Мультиплатформенность</h3><p>Web PWA сейчас, нативные iOS + Android запуск Q2 2026</p></div>
+        <div class="card"><h3>Глобальная подписочная модель</h3><p>Stripe + Tribute через Wyoming LLC без привязки к РФ</p></div>
       </div>
     </div>
   </section>
@@ -1230,8 +1281,6 @@
     <p class="lead" style="margin-bottom: 26px">К 2033: глобальная экосистема от беременности до школы для всех современных семей.</p>
     <div class="body-fill">
       <div class="card card--dark vision-panel">
-        <img class="bg-photo" src="img/home.jpg" alt="" />
-        <div class="bg-tint"></div>
         <h2>Полная экосистема Dreams Active</h2>
         <div class="vision-grid">
           <div class="v-num">500K+</div>
@@ -1249,15 +1298,17 @@
   </section>
 
   <!-- 17 · Thanks -->
-  <section class="slide slide--dark slide--center">
-    <img class="bg-photo" src="img/father.jpg" alt="" />
-    <div class="bg-tint"></div>
-    <div class="pearl" style="position: relative"></div>
-    <div class="thanks-title">Спасибо</div>
-    <div class="thanks-sub">Давайте вместе построим будущее родительства.</div>
-    <div class="thanks-name">Игорь Сетдеков</div>
-    <div class="thanks-role">Управляющий партнёр, Dreams Active</div>
-    <div class="thanks-contact">setdekov@pm.me<br />dreamsactive.com</div>
+  <section class="slide slide--dark">
+    <img class="edge-photo" src="img/kiss.jpg" alt="" style="object-position: 50% 25%" />
+    <div class="edge-fade"></div>
+    <div class="split-content">
+      <img class="brand-logo brand-logo--light" src="../assets/logo-horizontal.svg" alt="Dreams Active" style="height: 48px" />
+      <div class="thanks-title">Спасибо</div>
+      <div class="thanks-sub">Давайте вместе построим будущее родительства.</div>
+      <div class="thanks-name">Игорь Сетдеков</div>
+      <div class="thanks-role">Управляющий партнёр, Dreams Active</div>
+      <div class="thanks-contact">setdekov@pm.me · dreamsactive.com</div>
+    </div>
     <div class="thanks-legal">IG Club LLC (DBA Dreams Active) · Wyoming, USA · EIN 36-5172147</div>
   </section>
 

@@ -1315,7 +1315,7 @@ body.glass.stack-cards::after {
   position: fixed;
   inset: 0;
   z-index: 45;
-  border-radius: 48px;
+  border-radius: 48px 48px 0 0;
   box-shadow: 0 0 0 100vmax var(--beige-base);
   pointer-events: none;
 }
