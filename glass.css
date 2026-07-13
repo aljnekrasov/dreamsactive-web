@@ -626,6 +626,12 @@ body.glass::before {
   border-top: 0;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
+  /* Float the sheet in from the viewport edges as a rounded card
+     instead of a full-bleed band, matching the glass pill above.
+     Only geometry here — no paint until the menu opens (a border or
+     backdrop-filter on the collapsed sheet draws a page-wide hairline). */
+  margin: 8px 12px 0;
+  border-radius: 24px;
 }
 .glass .site-header.menu-open .mobile-sheet {
   background:
@@ -636,8 +642,14 @@ body.glass::before {
     );
   -webkit-backdrop-filter: var(--glass-blur-lg);
   backdrop-filter: var(--glass-blur-lg);
-  border-bottom: 1px solid var(--glass-border-soft);
+  border: 1px solid var(--glass-border-soft);
   box-shadow: var(--glass-shadow);
+}
+/* The card supplies its own inset now — trim the inner gutter so the
+   links don't sit doubly indented from the card edge. */
+.glass .mobile-sheet .container {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 /* ── Fullscreen photo captions get a glass chip ───────────── */
@@ -1292,17 +1304,25 @@ body.glass::before {
   box-shadow: 0 -22px 56px rgba(40, 36, 24, 0.2);
 }
 
-/* The full-bleed video becomes a card of its own: rounded glass
-   pane with a little air to the viewport edges. */
-.glass.stack-cards #video .ba-video video {
-  width: calc(100vw - 48px);
-  max-width: calc(100vw - 48px);
-  margin-left: calc(50% - 50vw + 24px);
+/* Viewport corner frame — the pane rounding as a fixed mask.
+   Cards taller than one viewport scroll their own corners off-screen
+   (they pin by the bottom edge), so the rounding is re-painted at the
+   viewport corners at all times: a fixed rounded window whose shadow
+   fills the corner gaps with the page backdrop. Sits above cards and
+   footer (z ≤ 40), below the header (50) and modals (100+). */
+body.glass.stack-cards::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 45;
   border-radius: 48px;
-  border: 1px solid var(--glass-border);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 18px 44px rgba(40, 36, 52, 0.2);
+  box-shadow: 0 0 0 100vmax var(--beige-base);
+  pointer-events: none;
 }
+
+/* The video always runs full-bleed — no side gutter, no card frame.
+   The base .glass #video rule already sets 100vw with border/radius/
+   shadow cleared, so the stack-cards variant deliberately adds no
+   inset here. */
 
 
