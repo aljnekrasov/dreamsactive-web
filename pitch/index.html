@@ -443,10 +443,27 @@
     display: block;
     height: 74px;
     width: auto;
+  }
+  .brand-logo--light { filter: brightness(0) invert(1); }
+  /* Real pearl (assets/apple-touch-icon.png) overlaid on the logo:
+     the invert filter flattens the SVG's raster pearl to a white
+     disc, so the photo pearl is pinned over its slot — rect 80,5
+     21×21 in the 156×33 viewBox. */
+  .logo-lockup {
+    position: relative;
+    display: inline-block;
     align-self: flex-start;
     margin: 0 0 26px;
   }
-  .brand-logo--light { filter: brightness(0) invert(1); }
+  .logo-lockup .logo-pearl {
+    position: absolute;
+    left: 51.28%;
+    top: 15.15%;
+    width: 13.47%;
+    height: 63.64%;
+    border-radius: 50%;
+    background: url("../assets/apple-touch-icon.png") center / 116% 116% no-repeat;
+  }
 
   .hero-round {
     margin-top: 52px;
@@ -836,7 +853,8 @@
     font-size: 13px; letter-spacing: 0.24em; color: rgba(244, 239, 228, 0.5);
     user-select: none;
   }
-  .brand-mini img { height: 22px; width: auto; filter: brightness(0) invert(1); opacity: 0.65; }
+  .brand-mini img { display: block; height: 22px; width: auto; filter: brightness(0) invert(1); opacity: 0.65; }
+  .brand-mini .logo-pearl { opacity: 0.75; }
 
   .hotzone { position: fixed; top: 0; bottom: 90px; width: 18%; z-index: 80; cursor: pointer; }
   .hotzone--prev { left: 0; }
@@ -872,7 +890,7 @@
     <img class="edge-photo" src="img/kiss.jpg" alt="" />
     <div class="edge-fade"></div>
     <div class="split-content">
-      <img class="brand-logo brand-logo--light" src="../assets/logo-horizontal.svg" alt="Dreams Active" />
+      <span class="logo-lockup"><img class="brand-logo brand-logo--light" src="../assets/logo-horizontal.svg" alt="Dreams Active" /><i class="logo-pearl"></i></span>
       <div class="title-sub">Платформа для современных родителей</div>
       <div class="title-chips">Беременность <b>·</b> Послеродовое восстановление <b>·</b> Раннее родительство</div>
       <div class="hero-round">Seed-раунд — Апрель 2026 · Конфиденциально</div>
@@ -1302,7 +1320,7 @@
     <img class="edge-photo" src="img/kiss.jpg" alt="" style="object-position: 50% 25%" />
     <div class="edge-fade"></div>
     <div class="split-content">
-      <img class="brand-logo brand-logo--light" src="../assets/logo-horizontal.svg" alt="Dreams Active" style="height: 48px" />
+      <span class="logo-lockup"><img class="brand-logo brand-logo--light" src="../assets/logo-horizontal.svg" alt="Dreams Active" style="height: 48px" /><i class="logo-pearl"></i></span>
       <div class="thanks-title">Спасибо</div>
       <div class="thanks-sub">Давайте вместе построим будущее родительства.</div>
       <div class="thanks-name">Игорь Сетдеков</div>
@@ -1315,7 +1333,7 @@
 </div>
 </div>
 
-<div class="brand-mini"><img src="../assets/logo-horizontal.svg" alt="Dreams Active" /></div>
+<div class="brand-mini"><span class="logo-lockup" style="margin: 0"><img src="../assets/logo-horizontal.svg" alt="Dreams Active" /><i class="logo-pearl"></i></span></div>
 <div class="nav-ui">
   <button type="button" id="prev" aria-label="Предыдущий слайд">←</button>
   <span class="counter" id="counter">1 / 17</span>
